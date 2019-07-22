@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "name": "email-sender",
+  "builds": [
+
+  	{ "src": "public/**/*", "use": "@now/static" },
+  	{ "src": "views/**/*", "use": "@now/static" },
+  	{ "src": "views/contact.handlebars", "use": "@now/node" },
+    { "src": "*.js", "use": "@now/node-server"}
+  ],
+  "routes": [
+    { "src": "/(.*)", "headers": {"cache-control": "s-maxage=0"}, "dest": "app.js"}
+  ],
+  "env": {
+    "GOOGLE_EMAIL": "hoursisthefuture@gmail.com"
+  }
+}
