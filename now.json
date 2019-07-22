@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "email-sender",
+  "name": "email-sender-hours",
   "builds": [
 
   	{ "src": "public/**/*", "use": "@now/static" },
