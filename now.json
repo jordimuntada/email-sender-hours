@@ -2,14 +2,14 @@
   "version": 2,
   "name": "email-sender-hours",
   "builds": [
-
   	{ "src": "public/**/*", "use": "@now/static" },
   	{ "src": "views/**/*", "use": "@now/static" },
-  	{ "src": "views/contact.handlebars", "use": "@now/node" },
-    { "src": "*.js", "use": "@now/node-server"}
+    { "src": "*.js", "use": "@now/node-server"},
+    { "src": "views/*.handlebars", "use": "@now/static"}
   ],
   "routes": [
-    { "src": "/(.*)", "headers": {"cache-control": "s-maxage=0"}, "dest": "app.js"}
+    { "src": "/(.*)", "headers": {"cache-control": "s-maxage=0"}, "dest": "app.js"},
+	{ "src": "/contact", "dest": "views/contact.handlebars" }
   ],
   "env": {
     "GOOGLE_EMAIL": "hoursisthefuture@gmail.com"

@@ -8,6 +8,7 @@ const app = express();
 
 // View engine setup
 app.engine('handlebars', exphbs());
+app.set('views', path.join(__dirname, "views")); //gràcies a aquesta línia, funciona ara el formulari "contact" amb now i now dev
 app.set('view engine', 'handlebars');
 
 // Static folder
@@ -24,7 +25,7 @@ app.get('/', (req, res) => {
 
 // Vaig tenir problema amb async i await
 // Solució: https://stackoverflow.com/questions/55396788/how-to-fix-await-is-only-valid-in-async-function-error-when-using-nodemailer
-app.post("/send",  (req, res) => {
+app.post("/send", async (req, res) => {
 	const output =`
 		<p> You have a new contact request </p>
 		<h3> Contact Details </h3>
@@ -56,7 +57,7 @@ app.post("/send",  (req, res) => {
 	  });
 
 	  // send mail with defined transport object
-	  let info =  transporter.sendMail({
+	  let info = await transporter.sendMail({
 	    from: '"Hours Contact 👻" <hoursisthefuture@gmail.com>', // sender address
 	    to: "jmuntada@gmail.com, jmuntada3@gmail.com", // list of receivers
 	    subject: "Hello from Nodemailer test✔", // Subject line
@@ -64,7 +65,7 @@ app.post("/send",  (req, res) => {
 	    //html: "<b>Hello world?</b>" // html body
 	    html: output // html body
 	  });
-	  console.log("Message sent: %s", info.messageId); //info.messageId
+	  console.log("Message sent: %s", info); //info.messageId
 	  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 	  res.render('contact', {
 	  	layout: false,
