@@ -16,16 +16,16 @@ app.engine('handlebars', exphbs());
 app.set('views', path.join(__dirname, "views")); //gràcies a aquesta línia, funciona ara el formulari "contact" amb now i now dev
 app.set('view engine', 'handlebars');
 
-// Static folder
-app.use('/public', express.static(path.join(__dirname, 'public')));
-
-// Body Parser Middleware
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
+/************************* CORS configuration ******************************/
+/*
 var allowedOrigins = ['http://localhost:3000',
 					  'http://hoursapp.es'];
-					  
+
+var corsOptions = {
+	origin: '*',
+	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
 // CORS config
 app.use(
 	cors({
@@ -35,6 +35,28 @@ app.use(
 }));
 
 app.options('*', cors());
+*/
+app.use((req, res, next) => {
+	res.header('Access-Control-Allow-Origin', "*");
+	res.header(
+		'Access-Control-Allow-Headers', 
+		'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+	);
+	if(req.method === 'OPTIONS') {
+		res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+		return res.status(200).json({});
+	}
+	next();
+});
+
+/************************* End CORS configuration ******************************/
+
+// Static folder
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// Body Parser Middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
 	res.send('I am an Email Sender for Hours app!');
@@ -44,13 +66,12 @@ console.log("------------------->  fora de app.post");
 // Vaig tenir problema amb async i await
 // Solució: https://stackoverflow.com/questions/55396788/how-to-fix-await-is-only-valid-in-async-function-error-when-using-nodemailer
 app.post("/send", async (req, res) => {
-	//res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-	res.header("Access-Control-Allow-Origin", "*");
+	//res.header("Access-Control-Allow-Origin", "*");
     //res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    //res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
 	console.log("------------------->  dins de app.post");
-	//console.log(req.body);
-	//res.send(req.body);
+	console.log(req.body);
+	res.send(req.body);
 	const output =`
 		<p> You have a new contact request </p>
 		<h3> Contact Details </h3>
