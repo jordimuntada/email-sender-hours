@@ -4,12 +4,10 @@
   "builds": [
   	{ "src": "public/**/*", "use": "@now/static" },
   	{ "src": "views/**/*", "use": "@now/static" },
-    { "src": "*.js", "use": "@now/node-server"},
-    { "src": "views/*.handlebars", "use": "@now/static"}
+    { "src": "*.js", "use": "@now/node@canary"}
   ],
   "routes": [
-    { "src": "/(.*)", "headers": {"cache-control": "s-maxage=0"}, "dest": "app.js"},
-	{ "src": "/contact", "dest": "views/contact.handlebars" }
+    { "src": "/(.*)", "headers": {"cache-control": "s-maxage=0"}, "dest": "app.js"}
   ],
   "env": {
     "GOOGLE_EMAIL": "hoursisthefuture@gmail.com"

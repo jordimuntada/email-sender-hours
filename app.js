@@ -4,7 +4,12 @@ const exphbs = require("express-handlebars");
 const nodemailer = require("nodemailer");
 const path = require('path');
 const axios = require('axios');
+const cors = require('cors');
+
 const app = express();
+
+const dotenv = require('dotenv');
+dotenv.config();
 
 // View engine setup
 app.engine('handlebars', exphbs());
@@ -18,14 +23,34 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-	//res.send('Hello World');
-	res.render('contact', {layout: false});
-});
+var allowedOrigins = ['http://localhost:3000',
+					  'http://hoursapp.es'];
+					  
+// CORS config
+app.use(
+	cors({
+	origin: '*',
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
+app.options('*', cors());
+
+app.get('/', (req, res) => {
+	res.send('I am an Email Sender for Hours app!');
+	//res.render('contact', {layout: false});
+});
+console.log("------------------->  fora de app.post");
 // Vaig tenir problema amb async i await
 // Solució: https://stackoverflow.com/questions/55396788/how-to-fix-await-is-only-valid-in-async-function-error-when-using-nodemailer
 app.post("/send", async (req, res) => {
+	//res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+	res.header("Access-Control-Allow-Origin", "*");
+    //res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+	console.log("------------------->  dins de app.post");
+	//console.log(req.body);
+	//res.send(req.body);
 	const output =`
 		<p> You have a new contact request </p>
 		<h3> Contact Details </h3>
@@ -38,7 +63,7 @@ app.post("/send", async (req, res) => {
 		<h3> Message </h3>
 		<p> ${req.body.message} </p>
 	`;
-	console.log(req.body);
+	
 
 	// create reusable transporter object using the default SMTP transport
 	  let transporter = nodemailer.createTransport({
@@ -55,16 +80,17 @@ app.post("/send", async (req, res) => {
 	    	rejectUnauthorized: false
 	    }*/
 	  });
-
+console.log("------------> FUNCIONA createTransport ");
 	  // send mail with defined transport object
 	  let info = await transporter.sendMail({
 	    from: '"Hours Contact 👻" <hoursisthefuture@gmail.com>', // sender address
 	    to: "jmuntada@gmail.com, jmuntada3@gmail.com", // list of receivers
-	    subject: "Hello from Nodemailer test✔", // Subject line
+	    subject: "Hello from Hours ✔", // Subject line
 	    text: "Hello world?", // plain text body
 	    //html: "<b>Hello world?</b>" // html body
 	    html: output // html body
 	  });
+console.log("------------> FUNCIONA sendMail ");
 	  console.log("Message sent: %s", info); //info.messageId
 	  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 	  res.render('contact', {
@@ -73,5 +99,5 @@ app.post("/send", async (req, res) => {
 	  });
 });
 
-app.listen(3000, () => console.log("server started"));
+app.listen(process.env.PORT, () => console.log("server started at port: ", process.env.PORT));
 
