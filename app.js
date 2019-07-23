@@ -90,8 +90,9 @@ app.post("/send", async (req, res) => {
 	    //host: "smtp.hostalia.com",
 	    //port: 587,
 	    host: 'smtp.gmail.com',
-    	port: 465,
-	    secure: true, // true for 465, false for other ports
+    	port: 587, //465,
+	    secure: false, // true for 465, false for other ports
+	    requireTLS: true,
 	    auth: {
 	      user: "hoursisthefuture@gmail.com", //"info@hours.es", // generated ethereal user
 	      pass: "somelfutur2018" //"Hours2019" // generated ethereal password
