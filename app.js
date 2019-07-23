@@ -70,8 +70,8 @@ app.post("/send", async (req, res) => {
     //res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
     //res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
 	console.log("------------------->  dins de app.post");
-//	console.log("===== >>>> ", req.body);
-//	res.send(req.body);
+	console.log("##### ===== >>>> ", req.body);
+	res.send(req.body);
 	const output =`
 		<p> You have a new contact request </p>
 		<h3> Contact Details </h3>
